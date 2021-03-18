@@ -30,7 +30,7 @@ class Python(object):
     
     def create(self):
         self.length = 2
-        self.positions = [((WINDOW_WIDTH / 2),(WINDOW_HEIGHT / 2))]
+        self.positions = [((WINDOW_WIDTH / 2), (WINDOW_HEIGHT / 2))]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
 
     def control(self, xy):
@@ -42,7 +42,7 @@ class Python(object):
     def move(self):
         cur = self.positions[0]
         x, y = self.direction
-        new = (((cur[0] + (x * GRID_SIZE) % WINDOW_WIDTH), (cur[1] + (y * GRID_SIZE)) % WINDOW_HEIGHT)
+        new = (((cur[0] + (x * GRID_SIZE)) % WINDOW_WIDTH), (cur[1] + (y * GRID_SIZE)) % WINDOW_HEIGHT)
         if new in self.positions[2:]:
             self.create()
         else: 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     surface = surface.convert()
     surface.fill(WHITE)
     clock = pygame.time.Clock()
-    pygame.key_set_repeat(1,40)
+    pygame.key.set_repeat(1,40)
     window.blit(surface, (0, 0))
 
     while True:
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         speed = (FPS + python.length) / 2
         python.draw(surface)
         feed.draw(surface)
-        windown.blit(surface, (0, 0))
+        window.blit(surface, (0, 0))
         pygame.display.flip()
         pygame.display.update()
         clock.tick(speed)

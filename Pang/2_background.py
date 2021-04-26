@@ -19,8 +19,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  
             running = False # Game is not running
-    screen.fill((0, 0, 255))
-    # screen.blit(background, (0, 0))
+
+    # screen.fill((0, 0, 255)) # Option to fill the screen with color code
+    screen.blit(background, (0, 0))
 
     pygame.display.update() # Game screen redrawn
 

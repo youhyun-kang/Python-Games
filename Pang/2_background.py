@@ -8,7 +8,7 @@ screen_height = 640
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Screen Title
-pygame.display.set_caption("Pang Game")
+pygame.display.set_caption("Game Name")
 
 # Background Image Added
 background = pygame.image.load("background.png")

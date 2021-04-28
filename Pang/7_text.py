@@ -10,6 +10,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # Screen Title
 pygame.display.set_caption("Game Name")
 
+#FPS
+clock = pygame.time.Clock()
+
 # Background Image Added
 background = pygame.image.load("background.png")
 
@@ -24,22 +27,46 @@ character_y_pos = screen_height - character_height
 to_x = 0
 to_y = 0
 
+# Character Speed
+character_speed = 0.5
+
+# Enemy Added
+enemy = pygame.image.load("enemy.png")
+enemy_size = enemy.get_rect().size 
+enemy_width = enemy_size[0]
+enemy_height = enemy_size[1]
+enemy_x_pos = (screen_width / 2) - (enemy_width / 2)
+enemy_y_pos = (screen_height / 2) - (enemy_height / 2)
+
+# Font Setting
+game_font = pygame.font.Font(None, 40) # Font, Size
+
+# Total Time
+total_time = 10
+
+# Time Info
+start_ticks = pygame.time.get_ticks()
+
 # Event Loop
 running = True
 while running:
+    dt = clock.tick(60) # set fps
+
+    print("fps : " + str(clock.get_fps()))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  
             running = False # Game is not running
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT: # move character to the left
-                to_x -= 1 # to_x = to_x - 1
+                to_x -= character_speed # to_x = to_x - 1
             elif event.key == pygame.K_RIGHT: # move character to the right
-                to_x += 1 
+                to_x += character_speed
             elif event.key == pygame.K_UP: # move character to the up
-                to_y -= 1 
+                to_y -= character_speed
             elif event.key == pygame.K_DOWN: # move character to the down
-                to_y += 1 
+                to_y += character_speed
         
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -47,8 +74,8 @@ while running:
             elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 to_y = 0
 
-    character_x_pos += to_x
-    character_y_pos += to_y
+    character_x_pos += to_x * dt
+    character_y_pos += to_y * dt
 
     # Width
     if character_x_pos < 0:
@@ -62,12 +89,44 @@ while running:
     elif character_y_pos > screen_height - character_height:
         character_y_pos = screen_height - character_height
 
+    # Rect Update in Case of Collision
+    character_rect = character.get_rect()
+    character_rect.left = character_x_pos
+    character_rect.top = character_y_pos
+
+    enemy_rect = enemy.get_rect()
+    enemy_rect.left = enemy_x_pos
+    enemy_rect.top = enemy_y_pos
+
+    # Collision Check
+    if character_rect.colliderect(enemy_rect):
+        print("COLLISION!")
+        running = False
+
 
     screen.blit(background, (0, 0))
-
     screen.blit(character, (character_x_pos, character_y_pos))
+    screen.blit(enemy, (enemy_x_pos, enemy_y_pos)) # draw enemy
 
+    # Timer Added
+    # Elapsed Time
+    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000 
+    # elapsed time (ms) converted to seconds by division
+
+    timer = game_font.render(str(int(total_time - elapsed_time)), True, (255, 255, 255))
+    # Text to be printed (Time), True, Font Color
+
+    screen.blit(timer, (10, 10))
+
+    # If time is below 0, end game
+    if total_time - elapsed_time <= 0:
+        print("TIME OUT")
+        running = False
     pygame.display.update() # Game screen redrawn
+
+# Wait Time at the end
+pygame.time.delay(2000) # Wait 2 seconds (ms) at the end of game
+
 
 # Close Pygame
 pygame.quit()
